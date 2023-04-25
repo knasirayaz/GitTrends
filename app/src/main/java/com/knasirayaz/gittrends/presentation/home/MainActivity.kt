@@ -128,28 +128,69 @@ fun TrendingRepoListScreen(trendingListItem: List<TrendingListItem>) {
 @Composable
 fun TrendingListItem(mTrendingListItem: TrendingListItem) {
     Row(Modifier.testTag(stringResource(id = R.string.tt_list_item))) {
-        ProfilePicture(mTrendingListItem.userProfilePicture)
-        ProfileDetails(mTrendingListItem)
+        ProfilePictureView(mTrendingListItem.userProfilePicture)
+        ProfileDetailsView(mTrendingListItem)
     }
 }
 
 @Composable
-fun ProfileDetails(mTrendingListItem: TrendingListItem) {
+fun ProfileDetailsView(mTrendingListItem: TrendingListItem) {
     Column {
-        Text(
-            text = mTrendingListItem.userName,
-            modifier = Modifier.testTag(stringResource(id = R.string.tt_user_name))
-        )
-        Text(
-            text = mTrendingListItem.repoName,
-            modifier = Modifier.testTag(stringResource(id = R.string.tt_repo_name))
-        )
+        NameView(mTrendingListItem.userName)
+        RepoNameView(mTrendingListItem.repoName)
+        RepoDescView(mTrendingListItem)
+        Row {
+            LanguageView(mTrendingListItem)
+            StarsView(mTrendingListItem)
+        }
+
+    }
+}
+
+@Composable
+private fun RepoDescView(mTrendingListItem: TrendingListItem) {
+    if (mTrendingListItem.isDescVisible)
         Text(
             text = mTrendingListItem.repoDesc.toString(),
             modifier = Modifier.testTag(stringResource(id = R.string.tt_repo_desc))
         )
+}
 
-        Row {
+@Composable
+private fun RepoNameView(mRepoName: String) {
+    Text(
+        text = mRepoName,
+        modifier = Modifier.testTag(stringResource(id = R.string.tt_repo_name))
+    )
+}
+
+@Composable
+private fun NameView(mUserName: String) {
+    Text(
+        text = mUserName,
+        modifier = Modifier.testTag(stringResource(id = R.string.tt_user_name))
+    )
+}
+
+@Composable
+fun StarsView(mTrendingListItem: TrendingListItem) {
+    if (mTrendingListItem.isStarVisible)
+        Row(Modifier.testTag(stringResource(id = R.string.tt_star_text_and_icon))) {
+            Image(
+                imageVector = Icons.Filled.Star,
+                contentDescription = stringResource(id = R.string.tt_stars_icon)
+            )
+            Text(
+                text = mTrendingListItem.starsCount.toString(),
+                modifier = Modifier.testTag(stringResource(id = R.string.tt_repo_stars))
+            )
+        }
+}
+
+@Composable
+fun LanguageView(mTrendingListItem: TrendingListItem) {
+    if (mTrendingListItem.isLanguageVisible)
+        Row(Modifier.testTag(stringResource(id = R.string.tt_language_with_shape))) {
             Box(
                 modifier = Modifier
                     .size(15.dp)
@@ -161,20 +202,12 @@ fun ProfileDetails(mTrendingListItem: TrendingListItem) {
                 text = mTrendingListItem.repoLanguage.toString(),
                 modifier = Modifier.testTag(stringResource(id = R.string.tt_repo_language))
             )
-            Image(
-                imageVector = Icons.Filled.Star,
-                contentDescription = stringResource(id = R.string.tt_stars_icon)
-            )
-            Text(
-                text = mTrendingListItem.starsCount.toString(),
-                modifier = Modifier.testTag(stringResource(id = R.string.tt_repo_stars)))
         }
 
-    }
 }
 
 @Composable
-fun ProfilePicture(url: String) {
+fun ProfilePictureView(url: String) {
     Image(
         painter = painterResource(id = R.drawable.ic_launcher_background),
         contentDescription = stringResource(

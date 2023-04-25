@@ -41,6 +41,7 @@ class TrendingRepoListScreenTest {
         context = composeTestRule.activity
     }
 
+    //Sample data to test functionality.
     private fun getTrendingListItems(): ArrayList<TrendingListItem> {
         val mTrendingListItems: ArrayList<TrendingListItem> = ArrayList()
 
@@ -209,4 +210,50 @@ class TrendingRepoListScreenTest {
 
     }
 
+    @Test
+    fun should_hide_desc_when_desc_is_null(){
+        composeTestRule.activity.setContent {
+            TrendingRepoListScreen(
+                //On Trending List at Index 1, Description is null on sample data.
+                listOf(getTrendingListItems()[1])
+            )
+        }
+
+        composeTestRule.apply {
+            onNodeWithTag(context.getString(string.tt_repo_desc))
+                .assertDoesNotExist()
+        }
+    }
+
+    @Test
+    fun should_hide_language_icon_and_text_when_it_is_null_or_empty(){
+        composeTestRule.activity.setContent {
+
+            //On Trending List at Index 2, Language is null on sample data.
+            TrendingRepoListScreen(
+                listOf(getTrendingListItems()[2])
+            )
+        }
+
+        composeTestRule.apply {
+            onNodeWithTag(context.getString(string.tt_language_with_shape))
+                .assertDoesNotExist()
+        }
+    }
+
+    @Test
+    fun should_hide_stars_icon_and_text_when_it_is_null_or_empty() {
+        composeTestRule.activity.setContent {
+
+            //On Trending List at Index 3, 'Star Count' is null on sample data provided above for test cases.
+            TrendingRepoListScreen(
+                listOf(getTrendingListItems()[3])
+            )
+        }
+
+        composeTestRule.apply {
+            onNodeWithTag(context.getString(string.tt_star_text_and_icon))
+                .assertDoesNotExist()
+        }
+    }
 }

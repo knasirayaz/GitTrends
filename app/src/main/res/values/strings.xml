@@ -13,4 +13,6 @@
     <string name="tt_repo_stars">repo_stars</string>
     <string name="tt_language_icon">language_icon</string>
     <string name="tt_stars_icon">stars_icon</string>
+    <string name="tt_language_with_shape">language_with_shape</string>
+    <string name="tt_star_text_and_icon">star_text_and_icon</string>
 </resources>
