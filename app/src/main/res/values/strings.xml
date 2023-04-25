@@ -3,4 +3,7 @@
     <string name="title_home_screen">Trending</string>
     <string name="testtag_app_bar">app_bar</string>
     <string name="tt_menu_button">menu_button</string>
+    <string name="tt_trending_list">trending_list</string>
+    <string name="tt_list_item">list_item</string>
+    <string name="tt_profile_picture">profile_picture</string>
 </resources>

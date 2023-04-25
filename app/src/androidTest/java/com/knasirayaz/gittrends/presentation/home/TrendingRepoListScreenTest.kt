@@ -33,6 +33,15 @@ class TrendingRepoListScreenTest {
         composeTestRule.onNodeWithContentDescription(context.getString(string.tt_menu_button)).assertExists()
     }
 
+    @Test
+    fun trending_list_is_present(){
+        composeTestRule.onNodeWithTag(context.getString(string.tt_trending_list)).assertExists()
+        composeTestRule.onNodeWithTag(context.getString(string.tt_list_item)).assertExists()
+        composeTestRule.onNodeWithContentDescription(context.getString(string.tt_profile_picture)).assertExists()
+        composeTestRule.onNodeWithTag("user_name").assertExists()
+
+    }
+
 
 
 
