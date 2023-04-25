@@ -1,4 +1,4 @@
-package com.knasirayaz.gittrends
+package com.knasirayaz.gittrends.presentation.home
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
