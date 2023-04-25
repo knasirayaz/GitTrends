@@ -1,4 +1,4 @@
-package com.knasirayaz.gittrends.ui.theme
+package com.knasirayaz.gittrends.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

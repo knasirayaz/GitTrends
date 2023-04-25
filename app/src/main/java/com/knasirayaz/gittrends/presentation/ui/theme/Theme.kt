@@ -1,4 +1,4 @@
-package com.knasirayaz.gittrends.ui.theme
+package com.knasirayaz.gittrends.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
