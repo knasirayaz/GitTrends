@@ -1,48 +1,212 @@
 package com.knasirayaz.gittrends.presentation.home
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertAll
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.knasirayaz.gittrends.R.*
-import org.junit.Assert.*
+import com.knasirayaz.gittrends.domain.models.TrendingListItem
 
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.manipulation.Ordering.Context
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class TrendingRepoListScreenTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    lateinit var context : android.content.Context
+    lateinit var context: android.content.Context
+
 
     @Before
     fun setUp() {
-        context = composeTestRule.activity
         composeTestRule.activity.setContent {
-            TrendingRepoListScreen()
+            TrendingRepoListScreen(
+                getTrendingListItems()
+            )
         }
+        context = composeTestRule.activity
+    }
+
+    private fun getTrendingListItems(): ArrayList<TrendingListItem> {
+        val mTrendingListItems: ArrayList<TrendingListItem> = ArrayList()
+
+        mTrendingListItems.add(
+            TrendingListItem(
+                userProfilePicture = "profilePicture",
+                userName = "TestName-1",
+                repoName = "Kotlin-DSL",
+                repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                repoLanguage = "Kotlin",
+                starsCount = "5000"
+            )
+        )
+
+        mTrendingListItems.add(
+            TrendingListItem(
+                userProfilePicture = "profilePicture",
+                userName = "TestName-2",
+                repoName = "Kotlin-DSL",
+                repoDesc = null,
+                repoLanguage = "Kotlin",
+                starsCount = "5000"
+            )
+        )
+
+        mTrendingListItems.add(
+            TrendingListItem(
+                userProfilePicture = "profilePicture",
+                userName = "TestName-3",
+                repoName = "Kotlin-DSL",
+                repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                repoLanguage = null,
+                starsCount = "5000"
+            )
+        )
+
+        mTrendingListItems.add(
+            TrendingListItem(
+                userProfilePicture = "profilePicture",
+                userName = "TestName-4",
+                repoName = "Kotlin-DSL",
+                repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                repoLanguage = "Kotlin",
+                starsCount = null
+            )
+        )
+        return mTrendingListItems
     }
 
     @Test
-    fun app_bar_is_present(){
-        composeTestRule.onNodeWithTag(context.getString(string.testtag_app_bar)).assertExists()
-        composeTestRule.onNodeWithContentDescription(context.getString(string.tt_menu_button)).assertExists()
+    fun app_bar_is_present() {
+
+        composeTestRule.onNodeWithTag(context.getString(string.tt_app_bar)).assertExists()
+        composeTestRule.onNodeWithContentDescription(context.getString(string.tt_menu_button))
+            .assertExists()
     }
 
     @Test
-    fun trending_list_is_present(){
-        composeTestRule.onNodeWithTag(context.getString(string.tt_trending_list)).assertExists()
-        composeTestRule.onNodeWithTag(context.getString(string.tt_list_item)).assertExists()
-        composeTestRule.onNodeWithContentDescription(context.getString(string.tt_profile_picture)).assertExists()
-        composeTestRule.onNodeWithTag("user_name").assertExists()
+    fun trending_list_is_present() {
+        composeTestRule.activity.setContent {
+            TrendingRepoListScreen(
+                getTrendingListItems()
+            )
+        }
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_trending_list))
+            .assertExists()
+    }
+
+    @Test
+    fun trending_list_items_are_present() {
+        val mCurrentTrendingListItem = getTrendingListItems().first()
+
+        composeTestRule.activity.setContent {
+            TrendingRepoListScreen(
+                arrayListOf(mCurrentTrendingListItem)
+            )
+        }
+
+
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_list_item))
+            .assertExists()
+        composeTestRule
+            .onNodeWithContentDescription(context.getString(string.tt_profile_picture))
+            .assertExists()
+
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_user_name))
+            .assertExists()
+
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_user_name))
+            .assert(hasText(mCurrentTrendingListItem.userName))
+
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_repo_name))
+            .assertExists()
+
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_repo_desc))
+            .assertExists()
+
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_language_icon))
+            .assertExists()
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_repo_language))
+            .assertExists()
+
+        composeTestRule
+            .onNodeWithContentDescription(context.getString(string.tt_stars_icon))
+            .assertExists()
+
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_repo_stars))
+            .assertExists()
+    }
+
+    @Test
+    fun should_not_list_items_when_list_is_empty() {
+        composeTestRule.activity.setContent {
+            TrendingRepoListScreen(
+                emptyList()
+            )
+        }
+
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_trending_list))
+            .onChildren()
+            .assertCountEquals(0)
+    }
+
+    @Test
+    fun should_show_list_when_list_is_not_empty() {
+        composeTestRule.activity.setContent {
+            TrendingRepoListScreen(
+                getTrendingListItems()
+            )
+        }
+
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_trending_list))
+            .onChildren()
+            .assertCountEquals(getTrendingListItems().size)
 
     }
 
+    @Test
+    fun verify_first_and_last_items_are_available() {
+        composeTestRule.apply {
+            onNodeWithTag(context.getString(string.tt_trending_list))
+                .onChildren()
+                .onFirst()
+                .onChildAt(1)
+                .assert(hasText(getTrendingListItems().first().userName))
+        }
 
+        composeTestRule.apply {
+            onNodeWithTag(context.getString(string.tt_trending_list))
+                .onChildren()
+                .onLast()
+                .onChildAt(1)
+                .assert(hasText(getTrendingListItems().last().userName))
+        }
 
+    }
 
 }

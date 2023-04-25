@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">GitTrends</string>
     <string name="title_home_screen">Trending</string>
-    <string name="testtag_app_bar">app_bar</string>
+    <string name="tt_app_bar">app_bar</string>
     <string name="tt_menu_button">menu_button</string>
     <string name="tt_trending_list">trending_list</string>
     <string name="tt_list_item">list_item</string>
     <string name="tt_profile_picture">profile_picture</string>
+    <string name="tt_user_name">user_name</string>
+    <string name="tt_repo_name">repo_name</string>
+    <string name="tt_repo_desc">repo_desc</string>
+    <string name="tt_repo_language">repo_language</string>
+    <string name="tt_repo_stars">repo_stars</string>
+    <string name="tt_language_icon">language_icon</string>
+    <string name="tt_stars_icon">stars_icon</string>
 </resources>

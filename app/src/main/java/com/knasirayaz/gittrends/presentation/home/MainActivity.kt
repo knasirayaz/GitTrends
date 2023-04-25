@@ -6,14 +6,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,13 +28,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.knasirayaz.gittrends.R
+import com.knasirayaz.gittrends.domain.models.TrendingListItem
 import com.knasirayaz.gittrends.presentation.ui.theme.GitTrendsTheme
 
 class MainActivity : ComponentActivity() {
@@ -42,15 +50,64 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TrendingRepoListScreen()
+                    TrendingRepoListScreen(getTrendingListItems())
                 }
             }
         }
     }
 }
 
+private fun getTrendingListItems(): ArrayList<TrendingListItem> {
+    val mTrendingListItems: ArrayList<TrendingListItem> = ArrayList()
+
+    mTrendingListItems.add(
+        TrendingListItem(
+            userProfilePicture = "profilePicture",
+            userName = "TestName",
+            repoName = "Kotlin-DSL",
+            repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+            repoLanguage = "Kotlin",
+            starsCount = "5000"
+        )
+    )
+
+    mTrendingListItems.add(
+        TrendingListItem(
+            userProfilePicture = "profilePicture",
+            userName = "TestName",
+            repoName = "Kotlin-DSL",
+            repoDesc = null,
+            repoLanguage = "Kotlin",
+            starsCount = "5000"
+        )
+    )
+
+    mTrendingListItems.add(
+        TrendingListItem(
+            userProfilePicture = "profilePicture",
+            userName = "TestName",
+            repoName = "Kotlin-DSL",
+            repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+            repoLanguage = null,
+            starsCount = "5000"
+        )
+    )
+
+    mTrendingListItems.add(
+        TrendingListItem(
+            userProfilePicture = "profilePicture",
+            userName = "TestName",
+            repoName = "Kotlin-DSL",
+            repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+            repoLanguage = "Kotlin",
+            starsCount = null
+        )
+    )
+    return mTrendingListItems
+}
+
 @Composable
-fun TrendingRepoListScreen() {
+fun TrendingRepoListScreen(trendingListItem: List<TrendingListItem>) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = { AppBar() },
@@ -59,7 +116,7 @@ fun TrendingRepoListScreen() {
                 LazyColumn(
                     modifier = Modifier.testTag(stringResource(id = R.string.tt_trending_list)),
                     content = {
-                        items(items = emptyList<String>()) {
+                        items(items = trendingListItem) {
                             TrendingListItem(it)
                         }
                     })
@@ -69,23 +126,61 @@ fun TrendingRepoListScreen() {
 }
 
 @Composable
-fun TrendingListItem(it: String) {
-  Row(Modifier.testTag(stringResource(id = R.string.tt_list_item))) {
-      ProfilePicture("need_to_pass_url_here")
-      ProfileDetails()
-  }
+fun TrendingListItem(mTrendingListItem: TrendingListItem) {
+    Row(Modifier.testTag(stringResource(id = R.string.tt_list_item))) {
+        ProfilePicture(mTrendingListItem.userProfilePicture)
+        ProfileDetails(mTrendingListItem)
+    }
 }
 
 @Composable
-fun ProfileDetails() {
+fun ProfileDetails(mTrendingListItem: TrendingListItem) {
+    Column {
+        Text(
+            text = mTrendingListItem.userName,
+            modifier = Modifier.testTag(stringResource(id = R.string.tt_user_name))
+        )
+        Text(
+            text = mTrendingListItem.repoName,
+            modifier = Modifier.testTag(stringResource(id = R.string.tt_repo_name))
+        )
+        Text(
+            text = mTrendingListItem.repoDesc.toString(),
+            modifier = Modifier.testTag(stringResource(id = R.string.tt_repo_desc))
+        )
 
+        Row {
+            Box(
+                modifier = Modifier
+                    .size(15.dp)
+                    .clip(CircleShape)
+                    .background(Color.Blue)
+                    .testTag(stringResource(id = R.string.tt_language_icon))
+            )
+            Text(
+                text = mTrendingListItem.repoLanguage.toString(),
+                modifier = Modifier.testTag(stringResource(id = R.string.tt_repo_language))
+            )
+            Image(
+                imageVector = Icons.Filled.Star,
+                contentDescription = stringResource(id = R.string.tt_stars_icon)
+            )
+            Text(
+                text = mTrendingListItem.starsCount.toString(),
+                modifier = Modifier.testTag(stringResource(id = R.string.tt_repo_stars)))
+        }
+
+    }
 }
 
 @Composable
-fun ProfilePicture(url : String) {
-    Image(painter = painterResource(id = R.drawable.ic_launcher_background), contentDescription = stringResource(
-        id = R.string.tt_profile_picture
-    ))
+fun ProfilePicture(url: String) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_launcher_background),
+        contentDescription = stringResource(
+            id = R.string.tt_profile_picture
+        )
+    )
 }
 
 @Composable
@@ -93,7 +188,7 @@ fun AppBar() {
     CenterAlignedTopAppBar(
         title = { Text(text = stringResource(R.string.title_home_screen)) },
         modifier = Modifier
-            .testTag(stringResource(R.string.testtag_app_bar))
+            .testTag(stringResource(R.string.tt_app_bar))
             .shadow(5.dp),
         actions = {
             Icon(
@@ -108,6 +203,17 @@ fun AppBar() {
 @Composable
 fun GreetingPreview() {
     GitTrendsTheme {
-        TrendingRepoListScreen()
+        TrendingRepoListScreen(
+            listOf(
+                TrendingListItem(
+                    userProfilePicture = "profilePicture",
+                    userName = "TestName",
+                    repoName = "Kotlin-DSL",
+                    repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                    repoLanguage = "Kotlin",
+                    starsCount = "5000"
+                )
+            )
+        )
     }
 }
