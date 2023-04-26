@@ -47,6 +47,10 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    hilt {
+        enableTransformForLocalTests = true
+    }
 }
 
 dependencies {
@@ -68,7 +72,11 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     //Dagger test
+    testImplementation 'com.google.dagger:hilt-android-testing:2.44'
     kaptTest 'com.google.dagger:hilt-android-compiler:2.44'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.44'
+
     androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
     kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.44'
 

@@ -9,8 +9,9 @@ import com.knasirayaz.gittrends.domain.models.TrendingListItem
 import com.knasirayaz.gittrends.domain.repository.TrendingRepoListRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TrendingRepoListViewModel(private val repository : TrendingRepoListRepository) : ViewModel(){
+class TrendingRepoListViewModel @Inject constructor(private var repository : TrendingRepoListRepository) : ViewModel(){
 
     private val trendingListLiveData = MutableLiveData<ResultStates<TrendingListItem?>>()
 
