@@ -1,4 +1,4 @@
-package com.knasirayaz.gittrends
+package com.knasirayaz.gittrends.presentation.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
@@ -42,9 +42,18 @@ class TrendingRepoListFeature {
     //Need to add Coroutine test to add StandardTestDispatcher.
     private val testDispatcher = StandardTestDispatcher()
 
+    private lateinit var mTrendingListItem: TrendingListItem
 
     @Before
     fun setup(){
+        mTrendingListItem =  TrendingListItem(
+            userProfilePicture = "profilePicture",
+            userName = "TestName-1",
+            repoName = "Kotlin-DSL",
+            repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+            repoLanguage = "Kotlin",
+            starsCount = "5000"
+        )
         Dispatchers.setMain(testDispatcher)
         mViewModel = TrendingRepoListViewModel(FakeTrendingListRepository())
         mViewModel.getTrendingListObserver().observeForever(mObserver)
@@ -64,7 +73,7 @@ class TrendingRepoListFeature {
         launch {
             inOrder(mObserver){
                 verify(mObserver).onChanged(ResultStates.Loading(true))
-                verify(mObserver).onChanged(ResultStates.Success(TrendingListItem("","","","","","")))
+                verify(mObserver).onChanged(ResultStates.Success(mTrendingListItem))
                 verify(mObserver).onChanged(ResultStates.Loading(false))
             }
 
