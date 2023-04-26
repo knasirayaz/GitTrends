@@ -1,6 +1,9 @@
 plugins {
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+
 }
 
 android {
@@ -58,6 +61,11 @@ dependencies {
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
+
+    //Dagger Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.arch.core:core-testing:2.2.0"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test"
@@ -73,4 +81,10 @@ dependencies {
     //Mockito framework
     testImplementation "org.mockito.kotlin:mockito-kotlin:4.1.0"
     testImplementation 'org.mockito:mockito-core:4.5.1'
+}
+
+
+//For Dagger Hilt for-to 'Allow References to generated code'
+kapt {
+    correctErrorTypes = true
 }
