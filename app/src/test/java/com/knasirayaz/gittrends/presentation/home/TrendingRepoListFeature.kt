@@ -2,6 +2,8 @@ package com.knasirayaz.gittrends.presentation.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.knasirayaz.gittrends.data.repository.TrendingRepoListRepositoryImpl
+import com.knasirayaz.gittrends.data.source.remote.Webservice
 import com.knasirayaz.gittrends.domain.common.ResultStates
 import com.knasirayaz.gittrends.domain.models.TrendingListItem
 import com.knasirayaz.gittrends.domain.repository.TrendingRepoListRepository
@@ -19,6 +21,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.inOrder
 
@@ -29,20 +32,17 @@ class TrendingRepoListFeature {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-
     @Mock
     lateinit var mObserver : Observer<ResultStates<Any?>>
 
     @Mock
-    lateinit var mRepository : TrendingRepoListRepository
+    lateinit var webService : Webservice
 
-    lateinit var mViewModel : TrendingRepoListViewModel
-
-
-    //Need to add Coroutine test to add StandardTestDispatcher.
-    private val testDispatcher = StandardTestDispatcher()
-
+    private lateinit var mRepository : TrendingRepoListRepository
+    private lateinit var mViewModel : TrendingRepoListViewModel
     private lateinit var mTrendingListItem: TrendingListItem
+
+    private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setup(){
@@ -55,22 +55,33 @@ class TrendingRepoListFeature {
             starsCount = "5000"
         )
         Dispatchers.setMain(testDispatcher)
-
-        mViewModel = TrendingRepoListViewModel(mRepository)
-        mViewModel.getTrendingListObserver().observeForever(mObserver)
-        mViewModel.getTrendingRepoList()
-
     }
 
     //Acceptance Test
     @Test
     fun `fetch trending repo list`() = runTest{
-        //Moved To-Do list to scratches
+        mRepository = TrendingRepoListRepositoryImpl(webService)
+        mViewModel = TrendingRepoListViewModel(mRepository)
+        mViewModel.getTrendingListObserver().observeForever(mObserver)
+        mViewModel.getTrendingRepoList()
+        launch {
+            inOrder(mObserver){
+                verify(mObserver).onChanged(ResultStates.Loading(true))
+                verify(mObserver).onChanged(ResultStates.Success(mTrendingListItem))
+                verify(mObserver).onChanged(ResultStates.Loading(false))
+            }
+
+        }
+
     }
 
 
     @Test
     fun `observer is working fine`() = runTest{
+        mRepository  = mock(TrendingRepoListRepository::class.java)
+        mViewModel = TrendingRepoListViewModel(mRepository)
+        mViewModel.getTrendingListObserver().observeForever(mObserver)
+        mViewModel.getTrendingRepoList()
         Mockito.`when`(mRepository.getRepoList()).thenReturn(ResultStates.Success(mTrendingListItem))
 
         launch {
