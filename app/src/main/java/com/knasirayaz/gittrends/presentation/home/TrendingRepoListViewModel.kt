@@ -5,21 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.knasirayaz.gittrends.domain.common.ResultStates
+import com.knasirayaz.gittrends.domain.models.TrendingListItem
+import com.knasirayaz.gittrends.domain.repository.TrendingRepoListRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class TrendingRepoListViewModel : ViewModel(){
+class TrendingRepoListViewModel(private val repository : TrendingRepoListRepository) : ViewModel(){
 
-    private val trendingListLiveData = MutableLiveData<ResultStates>()
+    private val trendingListLiveData = MutableLiveData<ResultStates<TrendingListItem?>>()
 
-    fun getTrendingListObserver() : LiveData<ResultStates>{
+    fun getTrendingListObserver() : LiveData<ResultStates<TrendingListItem?>>{
         return trendingListLiveData
     }
 
     fun getTrendingRepoList() {
         viewModelScope.launch {
             trendingListLiveData.value = ResultStates.Loading(isLoading = true)
-            trendingListLiveData.value = ResultStates.Success(listOf = emptyList())
+            trendingListLiveData.value = repository.getRepoList()
             trendingListLiveData.value = ResultStates.Loading(isLoading = false)
         }
 

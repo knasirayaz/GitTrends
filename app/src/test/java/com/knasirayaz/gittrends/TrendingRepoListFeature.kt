@@ -2,6 +2,7 @@ package com.knasirayaz.gittrends
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.knasirayaz.gittrends.data.repository.FakeTrendingListRepository
 import com.knasirayaz.gittrends.domain.common.ResultStates
 import com.knasirayaz.gittrends.domain.models.TrendingListItem
 import com.knasirayaz.gittrends.presentation.home.TrendingRepoListViewModel
@@ -34,7 +35,7 @@ class TrendingRepoListFeature {
 
 
     @Mock
-    lateinit var mObserver : Observer<ResultStates>
+    lateinit var mObserver : Observer<ResultStates<Any?>>
 
     lateinit var mViewModel : TrendingRepoListViewModel
 
@@ -45,7 +46,7 @@ class TrendingRepoListFeature {
     @Before
     fun setup(){
         Dispatchers.setMain(testDispatcher)
-        mViewModel = TrendingRepoListViewModel()
+        mViewModel = TrendingRepoListViewModel(FakeTrendingListRepository())
         mViewModel.getTrendingListObserver().observeForever(mObserver)
         mViewModel.getTrendingRepoList()
 
@@ -54,28 +55,20 @@ class TrendingRepoListFeature {
     //Acceptance Test
     @Test
     fun `fetch trending repo list`() = runTest{
-        /*Todo:
-           We will have observer (livedata) to observe when state changes.
-            - Need to mock observer (livedata).
-            - We will have a onSuccess, OnFailed and OnLoading states.
-            - verify that its state is changing
-         Todo:
-            - Create ViewModel and change observer state from there.
-            - When calling getTrendingRepoList method mObserver should change its state.
-         Todo:
-            - Add Loading States
-            - Verify Loading states are changing when we fetch list.
-           */
+        //Moved To-Do list to scratches
+    }
 
+
+    @Test
+    fun `observer is working fine`() = runTest{
         launch {
             inOrder(mObserver){
                 verify(mObserver).onChanged(ResultStates.Loading(true))
-                verify(mObserver).onChanged(ResultStates.Success(listOf()))
+                verify(mObserver).onChanged(ResultStates.Success(TrendingListItem("","","","","","")))
                 verify(mObserver).onChanged(ResultStates.Loading(false))
             }
-            
-        }
 
+        }
     }
 
     @After
