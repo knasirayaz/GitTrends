@@ -46,9 +46,9 @@ class TrendingRepoListScreenTest {
         val mTrendingListItems: ArrayList<TrendingListItem> = ArrayList()
 
         mTrendingListItems.add(
-            TrendingListItem(
-                userProfilePicture = "profilePicture",
-                userName = "TestName-1",
+           TrendingListItem(
+               owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+    userName = "TestName-1"),
                 repoName = "Kotlin-DSL",
                 repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
                 repoLanguage = "Kotlin",
@@ -57,9 +57,9 @@ class TrendingRepoListScreenTest {
         )
 
         mTrendingListItems.add(
-            TrendingListItem(
-                userProfilePicture = "profilePicture",
-                userName = "TestName-2",
+           TrendingListItem(
+               owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+    userName = "TestName-2"),
                 repoName = "Kotlin-DSL",
                 repoDesc = null,
                 repoLanguage = "Kotlin",
@@ -68,9 +68,9 @@ class TrendingRepoListScreenTest {
         )
 
         mTrendingListItems.add(
-            TrendingListItem(
-                userProfilePicture = "profilePicture",
-                userName = "TestName-3",
+           TrendingListItem(
+               owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+    userName = "TestName-3"),
                 repoName = "Kotlin-DSL",
                 repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
                 repoLanguage = null,
@@ -79,9 +79,9 @@ class TrendingRepoListScreenTest {
         )
 
         mTrendingListItems.add(
-            TrendingListItem(
-                userProfilePicture = "profilePicture",
-                userName = "TestName-4",
+           TrendingListItem(
+               owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+    userName = "TestName-4"),
                 repoName = "Kotlin-DSL",
                 repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
                 repoLanguage = "Kotlin",
@@ -135,7 +135,7 @@ class TrendingRepoListScreenTest {
 
         composeTestRule
             .onNodeWithTag(context.getString(string.tt_user_name))
-            .assert(hasText(mCurrentTrendingListItem.userName))
+            .assert(hasText(mCurrentTrendingListItem.owner.userName))
 
         composeTestRule
             .onNodeWithTag(context.getString(string.tt_repo_name))
@@ -197,7 +197,7 @@ class TrendingRepoListScreenTest {
                 .onChildren()
                 .onFirst()
                 .onChildAt(1)
-                .assert(hasText(getTrendingListItems().first().userName))
+                .assert(hasText(getTrendingListItems().first().owner.userName))
         }
 
         composeTestRule.apply {
@@ -205,7 +205,7 @@ class TrendingRepoListScreenTest {
                 .onChildren()
                 .onLast()
                 .onChildAt(1)
-                .assert(hasText(getTrendingListItems().last().userName))
+                .assert(hasText(getTrendingListItems().last().owner.userName))
         }
 
     }

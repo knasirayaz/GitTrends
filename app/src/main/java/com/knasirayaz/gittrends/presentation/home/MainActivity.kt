@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.knasirayaz.gittrends.presentation.home
 
@@ -69,8 +69,8 @@ private fun getTrendingListItems(): ArrayList<TrendingListItem> {
 
     mTrendingListItems.add(
         TrendingListItem(
-            userProfilePicture = "profilePicture",
-            userName = "TestName",
+            owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+    userName = "TestName"),
             repoName = "Kotlin-DSL",
             repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
             repoLanguage = "Kotlin",
@@ -80,8 +80,8 @@ private fun getTrendingListItems(): ArrayList<TrendingListItem> {
 
     mTrendingListItems.add(
         TrendingListItem(
-            userProfilePicture = "profilePicture",
-            userName = "TestName",
+            owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+    userName = "TestName"),
             repoName = "Kotlin-DSL",
             repoDesc = null,
             repoLanguage = "Kotlin",
@@ -91,8 +91,8 @@ private fun getTrendingListItems(): ArrayList<TrendingListItem> {
 
     mTrendingListItems.add(
         TrendingListItem(
-            userProfilePicture = "profilePicture",
-            userName = "TestName",
+            owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+    userName = "TestName"),
             repoName = "Kotlin-DSL",
             repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
             repoLanguage = null,
@@ -102,8 +102,8 @@ private fun getTrendingListItems(): ArrayList<TrendingListItem> {
 
     mTrendingListItems.add(
         TrendingListItem(
-            userProfilePicture = "profilePicture",
-            userName = "TestName",
+            owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+    userName = "TestName"),
             repoName = "Kotlin-DSL",
             repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
             repoLanguage = "Kotlin",
@@ -138,7 +138,7 @@ fun TrendingListItem(mTrendingListItem: TrendingListItem) {
         Modifier
             .testTag(stringResource(id = R.string.tt_list_item))
             .padding(start = 20.dp, top = 10.dp, end = 10.dp)) {
-        ProfilePictureView(mTrendingListItem.userProfilePicture)
+        ProfilePictureView(mTrendingListItem.owner.userProfilePicture)
         ProfileDetailsView(mTrendingListItem)
     }
     Divider(Modifier.padding(start = 20.dp, top = 10.dp))
@@ -147,7 +147,7 @@ fun TrendingListItem(mTrendingListItem: TrendingListItem) {
 @Composable
 fun ProfileDetailsView(mTrendingListItem: TrendingListItem) {
     Column (Modifier.padding(start = 15.dp)){
-        NameView(mTrendingListItem.userName)
+        NameView(mTrendingListItem.owner.userName)
         RepoNameView(mTrendingListItem.repoName)
         RepoDescView(mTrendingListItem)
         Spacer(Modifier.height(2.dp))
@@ -282,8 +282,8 @@ fun GreetingPreview() {
         TrendingRepoListScreen(
             listOf(
                 TrendingListItem(
-                    userProfilePicture = "profilePicture",
-                    userName = "TestName",
+                    owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+                        userName = "TestName"),
                     repoName = "Kotlin-DSL",
                     repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
                     repoLanguage = "Kotlin",

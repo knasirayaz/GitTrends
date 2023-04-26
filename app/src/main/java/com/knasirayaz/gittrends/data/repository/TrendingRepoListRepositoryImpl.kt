@@ -6,16 +6,20 @@ import com.knasirayaz.gittrends.domain.models.TrendingListItem
 import com.knasirayaz.gittrends.domain.repository.TrendingRepoListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.net.HttpRetryException
+import retrofit2.HttpException
 
 class TrendingRepoListRepositoryImpl(private val webService: Webservice) :
     TrendingRepoListRepository {
-    override suspend fun getRepoList(): ResultStates<TrendingListItem> =
+    override suspend fun getRepoList(): ResultStates<List<TrendingListItem>> =
         withContext(Dispatchers.IO) {
             try {
-                return@withContext ResultStates.Success(webService.fetchTrendingRepositories())
-            } catch (e: HttpRetryException) {
-                return@withContext ResultStates.Failed("Something is wrong")
+                val results  = webService.fetchTrendingRepositories()
+                if(!results.items.isNullOrEmpty())
+                    return@withContext ResultStates.Success(results.items)
+                else
+                    return@withContext ResultStates.Failed("Api Unreachable")
+            } catch (e: HttpException) {
+                return@withContext ResultStates.Failed("Api Unreachable")
             }
         }
 
