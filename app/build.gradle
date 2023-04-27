@@ -69,8 +69,14 @@ dependencies {
     //RetroGson
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
+    // AndroidJUnitRunner and JUnit Rules
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'androidx.test:runner:1.2.0'
+    testImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
     testImplementation "androidx.arch.core:core-testing:2.2.0"
+
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test"
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -88,6 +94,7 @@ dependencies {
     // For local unit tests
     testImplementation 'com.google.dagger:hilt-android-testing:2.44.2'
     kaptTest 'com.google.dagger:hilt-compiler:2.44.2'
+
 
 
     //Mockito framework
