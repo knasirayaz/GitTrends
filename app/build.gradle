@@ -17,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.knasirayaz.gittrends.HIltTestRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"//"com.knasirayaz.gittrends.HIltTestRunner"
         vectorDrawables {
             useSupportLibrary true
         }
@@ -63,24 +63,11 @@ dependencies {
     implementation 'androidx.compose.material3:material3'
 
     //Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.44")
-    implementation 'androidx.test:runner:1.4.0'
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
-
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-compiler:2.44"
 
     //RetroGson
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-
-
-
-    //Dagger test
-    testImplementation 'com.google.dagger:hilt-android-testing:2.44'
-    kaptTest 'com.google.dagger:hilt-android-compiler:2.44'
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
-    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.44'
-
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
-    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.44'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.arch.core:core-testing:2.2.0"
@@ -94,13 +81,23 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
 
+    // Hilt - Test
+    androidTestImplementation "com.google.dagger:hilt-android-testing:2.44.2"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:2.44"
+
+    // For local unit tests
+    testImplementation 'com.google.dagger:hilt-android-testing:2.44.2'
+    kaptTest 'com.google.dagger:hilt-compiler:2.44.2'
+
+
     //Mockito framework
     testImplementation "org.mockito.kotlin:mockito-kotlin:4.1.0"
     testImplementation 'org.mockito:mockito-core:4.5.1'
 }
 
+/*
 
 //For Dagger Hilt for-to 'Allow References to generated code'
 kapt {
     correctErrorTypes = true
-}
+}*/
