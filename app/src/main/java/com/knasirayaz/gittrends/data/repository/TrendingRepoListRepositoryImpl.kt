@@ -7,14 +7,15 @@ import com.knasirayaz.gittrends.domain.repository.TrendingRepoListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class TrendingRepoListRepositoryImpl(private val webService: Webservice) :
+class TrendingRepoListRepositoryImpl @Inject constructor(private val webService: Webservice) :
     TrendingRepoListRepository {
     override suspend fun getRepoList(): ResultStates<List<TrendingListItem>> =
         withContext(Dispatchers.IO) {
             try {
                 val results  = webService.fetchTrendingRepositories()
-                if(!results.items.isNullOrEmpty())
+                if(results.items.isNotEmpty())
                     return@withContext ResultStates.Success(results.items)
                 else
                     return@withContext ResultStates.Failed("Api Unreachable")

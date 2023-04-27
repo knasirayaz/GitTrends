@@ -4,5 +4,5 @@ import com.knasirayaz.gittrends.domain.common.ResultStates
 import com.knasirayaz.gittrends.domain.models.TrendingListItem
 
 interface TrendingRepoListRepository {
-    suspend fun getRepoList() : ResultStates<List<TrendingListItem>?>
+    suspend fun getRepoList() : ResultStates<List<TrendingListItem>>
 }

@@ -94,7 +94,7 @@ class TrendingRepoListFeature {
 
     @Test
     fun `failed to fetch trending repo list`() = runTest{
-        given(webService.fetchTrendingRepositories()).willReturn(GetTrendingRepoListResponse(false, null, 0))
+        given(webService.fetchTrendingRepositories()).willReturn(GetTrendingRepoListResponse(false, emptyList(), 0))
         mRepository = TrendingRepoListRepositoryImpl(webService)
         mViewModel = TrendingRepoListViewModel(mRepository)
         mViewModel.getTrendingListObserver().observeForever(mObserver)

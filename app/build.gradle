@@ -61,10 +61,13 @@ dependencies {
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.0.0-beta01'
 
     //Dagger Hilt
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0-alpha03"
+    kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha01'
 
     //RetroGson
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
@@ -98,6 +101,7 @@ dependencies {
     //Mockito framework
     testImplementation "org.mockito.kotlin:mockito-kotlin:4.1.0"
     testImplementation 'org.mockito:mockito-core:4.5.1'
+    testImplementation 'org.mockito:mockito-inline:2.13.0'
 
     //Mock WebServer
     testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
