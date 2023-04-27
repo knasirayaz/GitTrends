@@ -8,7 +8,6 @@ import com.knasirayaz.gittrends.domain.common.ResultStates
 import com.knasirayaz.gittrends.domain.models.GetTrendingRepoListResponse
 import com.knasirayaz.gittrends.domain.models.TrendingListItem
 import com.knasirayaz.gittrends.domain.repository.TrendingRepoListRepository
-import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -32,14 +31,13 @@ import org.mockito.kotlin.inOrder
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
-@HiltAndroidTest
 class TrendingRepoListFeature {
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
     @Mock
-    lateinit var mObserver  : Observer<ResultStates<Any?>>
+    lateinit var mObserver : Observer<ResultStates<Any?>>
 
     @Mock
     lateinit var webService : Webservice
