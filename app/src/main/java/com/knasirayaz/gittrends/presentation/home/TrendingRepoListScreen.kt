@@ -2,12 +2,15 @@
 
 package com.knasirayaz.gittrends.presentation.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,20 +18,28 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -36,9 +47,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.knasirayaz.gittrends.R
@@ -62,23 +79,77 @@ fun TrendingRepoListScreen(viewModel: TrendingRepoListViewModel = hiltViewModel(
                     viewModel.getTrendingRepoList(true)
                 }) {
                 Column(Modifier.padding(topBarPaddingValues)) {
-                    var isLoading = false
-                    if (state is ResultStates.Loading) {
-                        isLoading = (state as ResultStates.Loading).isLoading
-                    }
-                    if (isLoading) {
-                        LoadingView()
-                    } else {
-                        if (state is ResultStates.Success) {
+                    when(state){
+                        is ResultStates.Success -> {
                             val data = (state as ResultStates.Success).data
                             ListView(data)
                         }
-
+                        is ResultStates.Failed ->{
+                            RetryView {
+                                viewModel.getTrendingRepoList(true)
+                            }
+                        }
+                        is ResultStates.Loading ->{
+                            val isLoading = (state as ResultStates.Loading).isLoading
+                            if(isLoading)
+                                LoadingView()
+                        }
+                        else -> {}
                     }
                 }
             }
 
         })
+
+}
+
+@Composable
+fun RetryView(retry : () -> Unit) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_retry))
+    val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .testTag(stringResource(id = R.string.tt_error_view))){
+        Column (horizontalAlignment = Alignment.CenterHorizontally,  modifier = Modifier.fillMaxWidth()){
+            Spacer(modifier = Modifier.height(50.dp))
+
+            LottieAnimation(
+                modifier = Modifier.align(CenterHorizontally),
+                composition = composition,
+                progress = { progress },
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Text(
+                modifier = Modifier.align(CenterHorizontally),
+                text = stringResource(R.string.something_went_wrong),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.labelMedium,
+            )
+
+            Text(
+                modifier = Modifier.align(CenterHorizontally),
+                text = stringResource(R.string.an_alien_is_probably_blocking_your_signal),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.labelSmall)
+        }
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(start = 30.dp, end = 30.dp, bottom = 50.dp),
+            border = BorderStroke(0.5.dp, Color.Green),
+            shape = RoundedCornerShape(5.dp),
+            onClick = {
+                    retry.invoke()
+            }, ) {
+            Text(text = "RETRY", color = Color.Green,  style = MaterialTheme.typography.labelMedium)
+
+        }
+    }
+
 
 }
 

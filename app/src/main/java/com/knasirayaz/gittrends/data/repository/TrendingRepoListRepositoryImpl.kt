@@ -8,6 +8,8 @@ import com.knasirayaz.gittrends.domain.repository.TrendingRepoListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.io.IOException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class TrendingRepoListRepositoryImpl @Inject constructor(
@@ -40,7 +42,9 @@ class TrendingRepoListRepositoryImpl @Inject constructor(
                 }else
                     return@withContext ResultStates.Failed("Something went wrong")
             } catch (e: HttpException) {
-                return@withContext ResultStates.Failed(e.message())
+                return@withContext ResultStates.Failed(e.message.toString())
+            } catch (e: UnknownHostException){
+                return@withContext ResultStates.Failed(e.message.toString())
             }
         }
     }

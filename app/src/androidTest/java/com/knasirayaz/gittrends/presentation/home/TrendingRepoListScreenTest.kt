@@ -132,10 +132,10 @@ class TrendingRepoListScreenTest {
         composeTestRule
             .onNodeWithTag(context.getString(string.tt_pull_to_refresh))
             .assertExists()
-    }
 
-    @Test
-    fun should_refresh_when_pull(){
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_error_view))
+            .assertExists()
 
     }
 
