@@ -50,31 +50,36 @@ fun TrendingRepoListScreen(viewModel: TrendingRepoListViewModel = hiltViewModel(
 
     val state by viewModel.getTrendingListObserver().observeAsState()
 
-    viewModel.getTrendingRepoList()
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = { AppBar() },
         content = { topBarPaddingValues ->
             Column(Modifier.padding(topBarPaddingValues)) {
-                ListView(
-                    isDisplayed = state is ResultStates.Success,
-                    states = state
-                )
+                var isLoading = false
+                if (state is ResultStates.Loading) {
+                    isLoading = (state as ResultStates.Loading).isLoading
+                }
+                if (isLoading) {
+                    LazyColumn(modifier = Modifier.testTag(stringResource(id = R.string.tt_loading_view)),
+                        content = {
+                            items(20) {
+                                ShimmerListItem()
+                            }
+                        })
+                } else {
+                    if (state is ResultStates.Success) {
+                        val data = (state as ResultStates.Success).data
+                        LazyColumn(modifier = Modifier.testTag(stringResource(id = R.string.tt_trending_list)),
+                            content = {
+                                items(items = data) {
+                                    TrendingListItem(it)
+                                }
+                            })
+                    }
+
+                }
             }
         })
 
-}
-
-@Composable
-fun ListView(isDisplayed: Boolean, states: ResultStates<List<TrendingListItem>>?) {
-    if (isDisplayed) {
-        val mData = (states as ResultStates.Success<List<TrendingListItem>>).data
-        LazyColumn(modifier = Modifier.testTag(stringResource(id = R.string.tt_trending_list)),
-            content = {
-                items(items = mData) {
-                    TrendingListItem(it)
-                }
-            })
-    }
 }
 
 @Composable
@@ -82,12 +87,12 @@ fun TrendingListItem(mTrendingListItem: TrendingListItem) {
     Row(
         Modifier
             .testTag(stringResource(id = R.string.tt_list_item))
-            .padding(start = 20.dp, top = 10.dp, end = 10.dp)
+            .padding(start = 20.dp, top = 20.dp, end = 10.dp)
     ) {
         ProfilePictureView(mTrendingListItem.owner.userProfilePicture)
         ProfileDetailsView(mTrendingListItem)
     }
-    Divider(Modifier.padding(start = 20.dp, top = 10.dp))
+    Divider(Modifier.padding(start = 20.dp, top = 20.dp))
 }
 
 @Composable

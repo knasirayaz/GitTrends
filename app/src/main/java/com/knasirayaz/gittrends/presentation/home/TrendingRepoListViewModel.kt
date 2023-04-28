@@ -18,7 +18,9 @@ class TrendingRepoListViewModel @Inject constructor(private var repository : Tre
     private val trendingListLiveData = MutableLiveData<ResultStates<List<TrendingListItem>>>()
 
     fun getTrendingListObserver() : LiveData<ResultStates<List<TrendingListItem>>>{
-        return trendingListLiveData
+        return trendingListLiveData.also {
+            getTrendingRepoList()
+        }
     }
 
     fun getTrendingRepoList() {

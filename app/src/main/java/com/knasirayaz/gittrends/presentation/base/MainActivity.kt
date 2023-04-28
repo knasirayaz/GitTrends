@@ -39,56 +39,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private fun getTrendingListItems(): ArrayList<TrendingListItem> {
-    val mTrendingListItems: ArrayList<TrendingListItem> = ArrayList()
-
-    mTrendingListItems.add(
-        TrendingListItem(
-            owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
-    userName = "TestName"),
-            repoName = "Kotlin-DSL",
-            repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
-            repoLanguage = "Kotlin",
-            starsCount = "5000"
-        )
-    )
-
-    mTrendingListItems.add(
-        TrendingListItem(
-            owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
-    userName = "TestName"),
-            repoName = "Kotlin-DSL",
-            repoDesc = null,
-            repoLanguage = "Kotlin",
-            starsCount = "5000"
-        )
-    )
-
-    mTrendingListItems.add(
-        TrendingListItem(
-            owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
-    userName = "TestName"),
-            repoName = "Kotlin-DSL",
-            repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
-            repoLanguage = null,
-            starsCount = "5000"
-        )
-    )
-
-    mTrendingListItems.add(
-        TrendingListItem(
-            owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
-    userName = "TestName"),
-            repoName = "Kotlin-DSL",
-            repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
-            repoLanguage = "Kotlin",
-            starsCount = null
-        )
-    )
-    return mTrendingListItems
-}
-
-
 
 @Preview(showBackground = true)
 @Composable
@@ -96,4 +46,56 @@ fun PreviewScreen() {
     GitTrendsTheme {
 
     }
+}
+
+object SampleData{
+    fun getTrendingListItems(): ArrayList<TrendingListItem> {
+        val mTrendingListItems: ArrayList<TrendingListItem> = ArrayList()
+
+        mTrendingListItems.add(
+            TrendingListItem(
+                owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+                    userName = "TestName"),
+                repoName = "Kotlin-DSL",
+                repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                repoLanguage = "Kotlin",
+                starsCount = "5000"
+            )
+        )
+
+        mTrendingListItems.add(
+            TrendingListItem(
+                owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+                    userName = "TestName"),
+                repoName = "Kotlin-DSL",
+                repoDesc = null,
+                repoLanguage = "Kotlin",
+                starsCount = "5000"
+            )
+        )
+
+        mTrendingListItems.add(
+            TrendingListItem(
+                owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+                    userName = "TestName"),
+                repoName = "Kotlin-DSL",
+                repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                repoLanguage = null,
+                starsCount = "5000"
+            )
+        )
+
+        mTrendingListItems.add(
+            TrendingListItem(
+                owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+                    userName = "TestName"),
+                repoName = "Kotlin-DSL",
+                repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                repoLanguage = "Kotlin",
+                starsCount = null
+            )
+        )
+        return mTrendingListItems
+    }
+
 }

@@ -11,22 +11,33 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.knasirayaz.gittrends.R.*
+import com.knasirayaz.gittrends.domain.common.ResultStates
+import com.knasirayaz.gittrends.domain.models.GetTrendingRepoListResponse
 import com.knasirayaz.gittrends.domain.models.TrendingListItem
+import com.knasirayaz.gittrends.presentation.base.MainActivity
 
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.BDDMockito.given
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(MockitoJUnitRunner::class)
 class TrendingRepoListScreenTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     lateinit var context: android.content.Context
+
+    @Mock
+    lateinit var mTrendingRepoListViewModel: TrendingRepoListViewModel
+
 
 
     @Before
@@ -48,10 +59,12 @@ class TrendingRepoListScreenTest {
                 starsCount = "5000"
             )
 
+        given(mTrendingRepoListViewModel
+            .getTrendingListObserver())
+            .willReturn(MutableLiveData(ResultStates.Success(listOf(mCurrentTrendingListItem))))
+
         composeTestRule.activity.setContent {
-            TrendingRepoListScreen(
-                arrayListOf(mCurrentTrendingListItem)
-            )
+            TrendingRepoListScreen(mTrendingRepoListViewModel)
         }
 
 
@@ -104,10 +117,13 @@ class TrendingRepoListScreenTest {
 
     @Test
     fun should_not_list_items_when_list_is_empty() {
+        given(mTrendingRepoListViewModel
+            .getTrendingListObserver())
+            .willReturn(MutableLiveData(ResultStates.Success(listOf())))
+
+
         composeTestRule.activity.setContent {
-            TrendingRepoListScreen(
-                emptyList()
-            )
+            TrendingRepoListScreen(mTrendingRepoListViewModel)
         }
 
         composeTestRule
@@ -118,18 +134,22 @@ class TrendingRepoListScreenTest {
 
     @Test
     fun should_show_list_when_list_is_not_empty() {
+        given(mTrendingRepoListViewModel
+            .getTrendingListObserver())
+            .willReturn(MutableLiveData(ResultStates.Success(listOf(
+                TrendingListItem(
+                    owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+                        userName = "TestName-1"),
+                    repoName = "Kotlin-DSL",
+                    repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                    repoLanguage = "Kotlin",
+                    starsCount = "5000"
+                )
+            ))))
+
         composeTestRule.activity.setContent {
             TrendingRepoListScreen(
-                listOf(
-                    TrendingListItem(
-                        owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
-                            userName = "TestName-1"),
-                        repoName = "Kotlin-DSL",
-                        repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
-                        repoLanguage = "Kotlin",
-                        starsCount = "5000"
-                    )
-                )
+                mTrendingRepoListViewModel
             )
         }
 
@@ -141,22 +161,43 @@ class TrendingRepoListScreenTest {
     }
 
     @Test
-    fun should_hide_desc_when_desc_is_null() {
+    fun should_show_loadingView_when_loading_is_true(){
+        given(mTrendingRepoListViewModel
+            .getTrendingListObserver())
+            .willReturn(MutableLiveData(ResultStates.Loading(true)))
+
+
         composeTestRule.activity.setContent {
             TrendingRepoListScreen(
                 //On Trending List at Index 1, Description is null on sample data.
-                listOf(
-                    TrendingListItem(
-                        owner = TrendingListItem.Owner(
-                            userProfilePicture = "profilePicture",
-                            userName = "TestName-2"
-                        ),
-                        repoName = "Kotlin-DSL",
-                        repoDesc = null,
-                        repoLanguage = "Kotlin",
-                        starsCount = "5000"
-                    )
+                mTrendingRepoListViewModel
+            )
+        }
+
+        composeTestRule.onNodeWithTag(context.getString(string.tt_loading_view)).assertExists()
+    }
+
+    @Test
+    fun should_hide_desc_when_desc_is_null() {
+        given(mTrendingRepoListViewModel
+            .getTrendingListObserver())
+            .willReturn(MutableLiveData(ResultStates.Success(listOf(
+                TrendingListItem(
+                    owner = TrendingListItem.Owner(
+                        userProfilePicture = "profilePicture",
+                        userName = "TestName-2"
+                    ),
+                    repoName = "Kotlin-DSL",
+                    repoDesc = null,
+                    repoLanguage = "Kotlin",
+                    starsCount = "5000"
                 )
+            ))))
+
+        composeTestRule.activity.setContent {
+            TrendingRepoListScreen(
+                //On Trending List at Index 1, Description is null on sample data.
+                mTrendingRepoListViewModel
             )
         }
 
@@ -168,21 +209,24 @@ class TrendingRepoListScreenTest {
 
     @Test
     fun should_hide_language_icon_and_text_when_it_is_null_or_empty() {
-        composeTestRule.activity.setContent {
-            TrendingRepoListScreen(
-                listOf(
-                    TrendingListItem(
-                        owner = TrendingListItem.Owner(
-                            userProfilePicture = "profilePicture",
-                            userName = "TestName-3"
-                        ),
-                        repoName = "Kotlin-DSL",
-                        repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
-                        repoLanguage = null,
-                        starsCount = "5000"
-                    )
+
+        given(mTrendingRepoListViewModel
+            .getTrendingListObserver())
+            .willReturn(MutableLiveData(ResultStates.Success(listOf(
+                TrendingListItem(
+                    owner = TrendingListItem.Owner(
+                        userProfilePicture = "profilePicture",
+                        userName = "TestName-3"
+                    ),
+                    repoName = "Kotlin-DSL",
+                    repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                    repoLanguage = null,
+                    starsCount = "5000"
                 )
-            )
+            ))))
+
+        composeTestRule.activity.setContent {
+            TrendingRepoListScreen(mTrendingRepoListViewModel)
         }
 
         composeTestRule.apply {
@@ -193,21 +237,24 @@ class TrendingRepoListScreenTest {
 
     @Test
     fun should_hide_stars_icon_and_text_when_it_is_null_or_empty() {
-        composeTestRule.activity.setContent {
-            TrendingRepoListScreen(
-                listOf(
-                    TrendingListItem(
-                        owner = TrendingListItem.Owner(
-                            userProfilePicture = "profilePicture",
-                            userName = "TestName-4"
-                        ),
-                        repoName = "Kotlin-DSL",
-                        repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
-                        repoLanguage = "Kotlin",
-                        starsCount = null
-                    )
+        given(mTrendingRepoListViewModel
+            .getTrendingListObserver())
+            .willReturn(MutableLiveData(ResultStates.Success(listOf(
+                TrendingListItem(
+                    owner = TrendingListItem.Owner(
+                        userProfilePicture = "profilePicture",
+                        userName = "TestName-4"
+                    ),
+                    repoName = "Kotlin-DSL",
+                    repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                    repoLanguage = "Kotlin",
+                    starsCount = null
                 )
-            )
+            ))))
+
+
+        composeTestRule.activity.setContent {
+            TrendingRepoListScreen(mTrendingRepoListViewModel)
         }
 
         composeTestRule.apply {
