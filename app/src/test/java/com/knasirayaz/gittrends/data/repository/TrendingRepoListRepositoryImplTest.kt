@@ -1,5 +1,6 @@
 package com.knasirayaz.gittrends.data.repository
 
+import com.knasirayaz.gittrends.data.source.persistance.TrendingRepoListDao
 import com.knasirayaz.gittrends.data.source.remote.Webservice
 import com.knasirayaz.gittrends.domain.common.ResultStates
 import com.knasirayaz.gittrends.domain.models.GetTrendingRepoListResponse
@@ -14,10 +15,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.given
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import retrofit2.HttpException
 import retrofit2.Response
-import java.net.HttpRetryException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -29,6 +32,10 @@ class TrendingRepoListRepositoryImplTest{
 
     @Mock
     private lateinit var webService : Webservice
+
+    @Mock
+    private lateinit var mTrendingRepoListDao : TrendingRepoListDao
+
 
     @Before
     fun setup(){
@@ -48,7 +55,7 @@ class TrendingRepoListRepositoryImplTest{
             )
         )
 
-        mTrendingRepoListRepository = TrendingRepoListRepositoryImpl(webService)
+        mTrendingRepoListRepository = TrendingRepoListRepositoryImpl(webService, mTrendingRepoListDao)
     }
 
     @Test
@@ -63,5 +70,26 @@ class TrendingRepoListRepositoryImplTest{
         given(webService.fetchTrendingRepositories()).willThrow(HttpException(Response.error<TrendingListItem>(404, ResponseBody.create(null, ""))))
         val results = mTrendingRepoListRepository.getRepoList()
         assertEquals(ResultStates.Failed("Api Unreachable"), results)
+    }
+
+    @Test
+    fun `fetch data from database using dao`() = runTest{
+        given(mTrendingRepoListDao.fetchTrendingRepositories()).willReturn(mTrendingListItem.items)
+        val results = mTrendingRepoListRepository.getRepoList()
+        assertEquals(ResultStates.Success(mTrendingListItem.items), results)
+    }
+
+    @Test
+    fun `it should get data from api if database is empty`() = runTest{
+        given(webService.fetchTrendingRepositories()).willReturn(mTrendingListItem)
+        val results = mTrendingRepoListRepository.getRepoList()
+        assertEquals(ResultStates.Success(mTrendingListItem.items), results)
+    }
+
+    @Test
+    fun `it should save data from api to database`() = runTest{
+        given(webService.fetchTrendingRepositories()).willReturn(mTrendingListItem)
+        mTrendingRepoListRepository.getRepoList()
+        verify(mTrendingRepoListDao, times(1)).saveTrendingRepositories(mTrendingListItem.items)
     }
 }

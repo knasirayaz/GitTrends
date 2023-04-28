@@ -22,10 +22,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.given
 import org.mockito.kotlin.inOrder
 
@@ -72,7 +70,7 @@ class TrendingRepoListFeature {
     @Test
     fun `fetch trending repo list`() = runTest{
         given(webService.fetchTrendingRepositories()).willReturn(mTrendingListItem)
-        mRepository = TrendingRepoListRepositoryImpl(webService)
+        mRepository = TrendingRepoListRepositoryImpl(webService, null)
         mViewModel = TrendingRepoListViewModel(mRepository)
         mViewModel.getTrendingListObserver().observeForever(mObserver)
 
@@ -95,7 +93,7 @@ class TrendingRepoListFeature {
     @Test
     fun `failed to fetch trending repo list`() = runTest{
         given(webService.fetchTrendingRepositories()).willReturn(GetTrendingRepoListResponse(false, emptyList(), 0))
-        mRepository = TrendingRepoListRepositoryImpl(webService)
+        mRepository = TrendingRepoListRepositoryImpl(webService, null)
         mViewModel = TrendingRepoListViewModel(mRepository)
         mViewModel.getTrendingListObserver().observeForever(mObserver)
         mViewModel.getTrendingRepoList()

@@ -2,7 +2,6 @@
 
 package com.knasirayaz.gittrends.presentation.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -60,27 +59,37 @@ fun TrendingRepoListScreen(viewModel: TrendingRepoListViewModel = hiltViewModel(
                     isLoading = (state as ResultStates.Loading).isLoading
                 }
                 if (isLoading) {
-                    LazyColumn(modifier = Modifier.testTag(stringResource(id = R.string.tt_loading_view)),
-                        content = {
-                            items(20) {
-                                ShimmerListItem()
-                            }
-                        })
+                    LoadingView()
                 } else {
                     if (state is ResultStates.Success) {
                         val data = (state as ResultStates.Success).data
-                        LazyColumn(modifier = Modifier.testTag(stringResource(id = R.string.tt_trending_list)),
-                            content = {
-                                items(items = data) {
-                                    TrendingListItem(it)
-                                }
-                            })
+                        ListView(data)
                     }
 
                 }
             }
         })
 
+}
+
+@Composable
+fun ListView(data: List<TrendingListItem>) {
+    LazyColumn(modifier = Modifier.testTag(stringResource(id = R.string.tt_trending_list)),
+        content = {
+            items(items = data) {
+                TrendingListItem(it)
+            }
+        })
+}
+
+@Composable
+fun LoadingView() {
+    LazyColumn(modifier = Modifier.testTag(stringResource(id = R.string.tt_loading_view)),
+        content = {
+            items(20) {
+                ShimmerListItem()
+            }
+        })
 }
 
 @Composable

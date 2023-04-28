@@ -50,7 +50,7 @@ object AppModule  {
     @Singleton
     @Provides
     fun provideTrendingRepository(webService : Webservice) : TrendingRepoListRepository {
-        return TrendingRepoListRepositoryImpl(webService)
+        return TrendingRepoListRepositoryImpl(webService, null)
     }
 
 
