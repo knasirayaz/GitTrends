@@ -42,7 +42,7 @@ class TrendingRepoListRepositoryImpl @Inject constructor(
                 }else
                     return@withContext ResultStates.Failed("Something went wrong")
             } catch (e: HttpException) {
-                return@withContext ResultStates.Failed(e.message.toString())
+                return@withContext ResultStates.Failed("Something went wrong")
             } catch (e: UnknownHostException){
                 return@withContext ResultStates.Failed(e.message.toString())
             }

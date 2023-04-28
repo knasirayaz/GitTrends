@@ -12,7 +12,6 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performGesture
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.lifecycle.MutableLiveData
@@ -54,7 +53,6 @@ class TrendingRepoListScreenTest {
     lateinit var mTrendingRepoListViewModel: TrendingRepoListViewModel
 
 
-
     @Before
     fun setUp() {
         context = composeTestRule.activity
@@ -74,8 +72,10 @@ class TrendingRepoListScreenTest {
                 starsCount = "5000"
             )
 
-        given(mTrendingRepoListViewModel
-            .getTrendingListObserver())
+        given(
+            mTrendingRepoListViewModel
+                .getTrendingListObserver()
+        )
             .willReturn(MutableLiveData(ResultStates.Success(listOf(mCurrentTrendingListItem))))
 
         composeTestRule.activity.setContent {
@@ -132,17 +132,29 @@ class TrendingRepoListScreenTest {
         composeTestRule
             .onNodeWithTag(context.getString(string.tt_pull_to_refresh))
             .assertExists()
+    }
 
+    @Test
+    fun should_show_error_view_when_results_fetch_to_fails() {
+        given(
+            mTrendingRepoListViewModel
+                .getTrendingListObserver()
+        )
+            .willReturn(MutableLiveData(ResultStates.Failed("")))
+
+        composeTestRule.activity.setContent {
+            TrendingRepoListScreen(mTrendingRepoListViewModel)
+        }
         composeTestRule
-            .onNodeWithTag(context.getString(string.tt_error_view))
-            .assertExists()
-
+            .onNodeWithTag(context.getString(string.tt_error_view)).assertIsDisplayed()
     }
 
     @Test
     fun should_not_list_items_when_list_is_empty() {
-        given(mTrendingRepoListViewModel
-            .getTrendingListObserver())
+        given(
+            mTrendingRepoListViewModel
+                .getTrendingListObserver()
+        )
             .willReturn(MutableLiveData(ResultStates.Success(listOf())))
 
 
@@ -158,19 +170,29 @@ class TrendingRepoListScreenTest {
 
     @Test
     fun should_show_list_when_list_is_not_empty() {
-        given(mTrendingRepoListViewModel
-            .getTrendingListObserver())
-            .willReturn(MutableLiveData(ResultStates.Success(listOf(
-                TrendingListItem(
-                    id = 0,
-                    owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
-                        userName = "TestName-1"),
-                    repoName = "Kotlin-DSL",
-                    repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
-                    repoLanguage = "Kotlin",
-                    starsCount = "5000"
+        given(
+            mTrendingRepoListViewModel
+                .getTrendingListObserver()
+        )
+            .willReturn(
+                MutableLiveData(
+                    ResultStates.Success(
+                        listOf(
+                            TrendingListItem(
+                                id = 0,
+                                owner = TrendingListItem.Owner(
+                                    userProfilePicture = "profilePicture",
+                                    userName = "TestName-1"
+                                ),
+                                repoName = "Kotlin-DSL",
+                                repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                                repoLanguage = "Kotlin",
+                                starsCount = "5000"
+                            )
+                        )
+                    )
                 )
-            ))))
+            )
 
         composeTestRule.activity.setContent {
             TrendingRepoListScreen(
@@ -186,12 +208,14 @@ class TrendingRepoListScreenTest {
     }
 
     @Test
-    fun should_show_loadingView_when_loading_is_true(){
-        given(mTrendingRepoListViewModel
-            .getTrendingListObserver())
+    fun should_show_loadingView_when_loading_is_true() {
+        given(
+            mTrendingRepoListViewModel
+                .getTrendingListObserver()
+        )
             .willReturn(MutableLiveData(ResultStates.Loading(true)))
 
-        
+
         composeTestRule.activity.setContent {
             TrendingRepoListScreen(
                 //On Trending List at Index 1, Description is null on sample data.
@@ -204,21 +228,29 @@ class TrendingRepoListScreenTest {
 
     @Test
     fun should_hide_desc_when_desc_is_null() {
-        given(mTrendingRepoListViewModel
-            .getTrendingListObserver())
-            .willReturn(MutableLiveData(ResultStates.Success(listOf(
-                TrendingListItem(
-                    id = 0,
-                    owner = TrendingListItem.Owner(
-                        userProfilePicture = "profilePicture",
-                        userName = "TestName-2"
-                    ),
-                    repoName = "Kotlin-DSL",
-                    repoDesc = null,
-                    repoLanguage = "Kotlin",
-                    starsCount = "5000"
+        given(
+            mTrendingRepoListViewModel
+                .getTrendingListObserver()
+        )
+            .willReturn(
+                MutableLiveData(
+                    ResultStates.Success(
+                        listOf(
+                            TrendingListItem(
+                                id = 0,
+                                owner = TrendingListItem.Owner(
+                                    userProfilePicture = "profilePicture",
+                                    userName = "TestName-2"
+                                ),
+                                repoName = "Kotlin-DSL",
+                                repoDesc = null,
+                                repoLanguage = "Kotlin",
+                                starsCount = "5000"
+                            )
+                        )
+                    )
                 )
-            ))))
+            )
 
         composeTestRule.activity.setContent {
             TrendingRepoListScreen(
@@ -236,21 +268,29 @@ class TrendingRepoListScreenTest {
     @Test
     fun should_hide_language_icon_and_text_when_it_is_null_or_empty() {
 
-        given(mTrendingRepoListViewModel
-            .getTrendingListObserver())
-            .willReturn(MutableLiveData(ResultStates.Success(listOf(
-                TrendingListItem(
-                    id = 0,
-                    owner = TrendingListItem.Owner(
-                        userProfilePicture = "profilePicture",
-                        userName = "TestName-3"
-                    ),
-                    repoName = "Kotlin-DSL",
-                    repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
-                    repoLanguage = null,
-                    starsCount = "5000"
+        given(
+            mTrendingRepoListViewModel
+                .getTrendingListObserver()
+        )
+            .willReturn(
+                MutableLiveData(
+                    ResultStates.Success(
+                        listOf(
+                            TrendingListItem(
+                                id = 0,
+                                owner = TrendingListItem.Owner(
+                                    userProfilePicture = "profilePicture",
+                                    userName = "TestName-3"
+                                ),
+                                repoName = "Kotlin-DSL",
+                                repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                                repoLanguage = null,
+                                starsCount = "5000"
+                            )
+                        )
+                    )
                 )
-            ))))
+            )
 
         composeTestRule.activity.setContent {
             TrendingRepoListScreen(mTrendingRepoListViewModel)
@@ -264,21 +304,29 @@ class TrendingRepoListScreenTest {
 
     @Test
     fun should_hide_stars_icon_and_text_when_it_is_null_or_empty() {
-        given(mTrendingRepoListViewModel
-            .getTrendingListObserver())
-            .willReturn(MutableLiveData(ResultStates.Success(listOf(
-                TrendingListItem(
-                    id = 0,
-                    owner = TrendingListItem.Owner(
-                        userProfilePicture = "profilePicture",
-                        userName = "TestName-4"
-                    ),
-                    repoName = "Kotlin-DSL",
-                    repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
-                    repoLanguage = "Kotlin",
-                    starsCount = null
+        given(
+            mTrendingRepoListViewModel
+                .getTrendingListObserver()
+        )
+            .willReturn(
+                MutableLiveData(
+                    ResultStates.Success(
+                        listOf(
+                            TrendingListItem(
+                                id = 0,
+                                owner = TrendingListItem.Owner(
+                                    userProfilePicture = "profilePicture",
+                                    userName = "TestName-4"
+                                ),
+                                repoName = "Kotlin-DSL",
+                                repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
+                                repoLanguage = "Kotlin",
+                                starsCount = null
+                            )
+                        )
+                    )
                 )
-            ))))
+            )
 
 
         composeTestRule.activity.setContent {

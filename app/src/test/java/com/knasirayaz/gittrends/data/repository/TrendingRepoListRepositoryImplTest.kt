@@ -69,10 +69,9 @@ class TrendingRepoListRepositoryImplTest{
 
     @Test
     fun `it should return failure when list is not fetched successfully`() = runTest{
-        val error =  Response.error<TrendingListItem>(404, "".toResponseBody(null))
-        given(webService.fetchTrendingRepositories()).willThrow(HttpException(error))
-        val results = mTrendingRepoListRepository.getRepoList(false)
-        assertEquals(ResultStates.Failed(error.message()), results)
+        given(webService.fetchTrendingRepositories()).willThrow(HttpException(Response.error<TrendingListItem>(404, ResponseBody.create(null, ""))))
+        val results = mTrendingRepoListRepository.getRepoList(true)
+        assertEquals(ResultStates.Failed("Something went wrong"), results)
     }
 
     @Test
