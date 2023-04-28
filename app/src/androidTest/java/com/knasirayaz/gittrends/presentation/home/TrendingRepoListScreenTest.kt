@@ -49,7 +49,7 @@ class TrendingRepoListScreenTest {
     fun verify_all_screen_items_are_present() {
         val mCurrentTrendingListItem =
             TrendingListItem(
-                owner = TrendingListItem.Owner(
+                id = 0, owner = TrendingListItem.Owner(
                     userProfilePicture = "profilePicture",
                     userName = "TestName-1"
                 ),
@@ -138,6 +138,7 @@ class TrendingRepoListScreenTest {
             .getTrendingListObserver())
             .willReturn(MutableLiveData(ResultStates.Success(listOf(
                 TrendingListItem(
+                    id = 0,
                     owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
                         userName = "TestName-1"),
                     repoName = "Kotlin-DSL",
@@ -166,14 +167,14 @@ class TrendingRepoListScreenTest {
             .getTrendingListObserver())
             .willReturn(MutableLiveData(ResultStates.Loading(true)))
 
-
+        
         composeTestRule.activity.setContent {
             TrendingRepoListScreen(
                 //On Trending List at Index 1, Description is null on sample data.
                 mTrendingRepoListViewModel
             )
         }
-
+        
         composeTestRule.onNodeWithTag(context.getString(string.tt_loading_view)).assertExists()
     }
 
@@ -183,6 +184,7 @@ class TrendingRepoListScreenTest {
             .getTrendingListObserver())
             .willReturn(MutableLiveData(ResultStates.Success(listOf(
                 TrendingListItem(
+                    id = 0,
                     owner = TrendingListItem.Owner(
                         userProfilePicture = "profilePicture",
                         userName = "TestName-2"
@@ -214,6 +216,7 @@ class TrendingRepoListScreenTest {
             .getTrendingListObserver())
             .willReturn(MutableLiveData(ResultStates.Success(listOf(
                 TrendingListItem(
+                    id = 0,
                     owner = TrendingListItem.Owner(
                         userProfilePicture = "profilePicture",
                         userName = "TestName-3"
@@ -241,6 +244,7 @@ class TrendingRepoListScreenTest {
             .getTrendingListObserver())
             .willReturn(MutableLiveData(ResultStates.Success(listOf(
                 TrendingListItem(
+                    id = 0,
                     owner = TrendingListItem.Owner(
                         userProfilePicture = "profilePicture",
                         userName = "TestName-4"

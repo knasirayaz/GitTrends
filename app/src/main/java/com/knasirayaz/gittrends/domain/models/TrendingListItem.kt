@@ -1,8 +1,14 @@
 package com.knasirayaz.gittrends.domain.models
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity
 data class TrendingListItem(
+    @PrimaryKey
+    val id: Int,
     @SerializedName("name")
     val repoName : String,
     @SerializedName("description")
@@ -11,7 +17,7 @@ data class TrendingListItem(
     val repoLanguage : String?,
     @SerializedName("stargazers_count")
     val starsCount : String?,
-    val owner: Owner) {
+    @Embedded val owner: Owner) {
 
     val isLanguageVisible
         get() = !(repoLanguage.isNullOrEmpty())

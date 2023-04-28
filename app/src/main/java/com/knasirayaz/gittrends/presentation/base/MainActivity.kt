@@ -54,6 +54,7 @@ object SampleData{
 
         mTrendingListItems.add(
             TrendingListItem(
+                id = 0,
                 owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
                     userName = "TestName"),
                 repoName = "Kotlin-DSL",
@@ -65,6 +66,7 @@ object SampleData{
 
         mTrendingListItems.add(
             TrendingListItem(
+                id = 1,
                 owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
                     userName = "TestName"),
                 repoName = "Kotlin-DSL",
@@ -76,7 +78,7 @@ object SampleData{
 
         mTrendingListItems.add(
             TrendingListItem(
-                owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+                id = 2, owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
                     userName = "TestName"),
                 repoName = "Kotlin-DSL",
                 repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
@@ -87,7 +89,7 @@ object SampleData{
 
         mTrendingListItems.add(
             TrendingListItem(
-                owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
+                id = 3, owner = TrendingListItem.Owner(userProfilePicture = "profilePicture",
                     userName = "TestName"),
                 repoName = "Kotlin-DSL",
                 repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
