@@ -52,6 +52,7 @@ class TrendingRepoListFeature {
             false,
             listOf(
                 TrendingListItem(
+                    id = 0,
                     repoName = "Kotlin-DSL",
                     repoDesc = "The Kotlin DSL Plugin provides a convenient way to develop Kotlin-based projects that contribute build logic",
                     repoLanguage = "Kotlin",

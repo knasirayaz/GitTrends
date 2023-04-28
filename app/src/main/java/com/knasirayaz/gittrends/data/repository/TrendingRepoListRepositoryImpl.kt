@@ -12,13 +12,13 @@ import javax.inject.Inject
 
 class TrendingRepoListRepositoryImpl @Inject constructor(
     private val webService: Webservice,
-    private val dao: TrendingRepoListDao?
+    private val dao: TrendingRepoListDao
 ) :
     TrendingRepoListRepository {
     override suspend fun getRepoList(): ResultStates<List<TrendingListItem>> =
         withContext(Dispatchers.IO) {
-            val resultsFromDb = dao?.fetchTrendingRepositories()
-            if(resultsFromDb.isNullOrEmpty()){
+            val resultsFromDb = dao.fetchTrendingRepositories()
+            if(resultsFromDb.isEmpty()){
                return@withContext getDataFromApi()
             }else{
                 return@withContext ResultStates.Success(resultsFromDb)
@@ -41,7 +41,7 @@ class TrendingRepoListRepositoryImpl @Inject constructor(
     }
 
     private suspend fun saveTrendingListToDatabase(items: List<TrendingListItem>) {
-        dao?.saveTrendingRepositories(items)
+        dao.saveTrendingRepositories(items)
     }
 
 }

@@ -3,6 +3,7 @@ package com.knasirayaz.gittrends.presentation.home
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildAt
@@ -14,10 +15,14 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.knasirayaz.gittrends.R.*
+import com.knasirayaz.gittrends.di.AppModule
 import com.knasirayaz.gittrends.domain.common.ResultStates
 import com.knasirayaz.gittrends.domain.models.GetTrendingRepoListResponse
 import com.knasirayaz.gittrends.domain.models.TrendingListItem
 import com.knasirayaz.gittrends.presentation.base.MainActivity
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 
 import org.junit.Before
 import org.junit.Rule
@@ -27,11 +32,17 @@ import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
+
+@HiltAndroidTest
 @RunWith(MockitoJUnitRunner::class)
+@UninstallModules(AppModule::class)
 class TrendingRepoListScreenTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
 
     lateinit var context: android.content.Context
 
@@ -174,8 +185,8 @@ class TrendingRepoListScreenTest {
                 mTrendingRepoListViewModel
             )
         }
-        
-        composeTestRule.onNodeWithTag(context.getString(string.tt_loading_view)).assertExists()
+
+        composeTestRule.onNodeWithTag(context.getString(string.tt_loading_view)).assertIsDisplayed()
     }
 
     @Test

@@ -25,7 +25,6 @@ import com.knasirayaz.gittrends.R
 @Composable
 fun ShimmerListItem() {
     Row(modifier = Modifier
-        .testTag(stringResource(id = R.string.tt_loading_view))
         .padding(start = 20.dp, top = 20.dp, end = 10.dp)) {
         Box(
             modifier = Modifier
