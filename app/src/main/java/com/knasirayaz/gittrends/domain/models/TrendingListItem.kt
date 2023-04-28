@@ -13,9 +13,12 @@ data class TrendingListItem(
     val starsCount : String?,
     val owner: Owner) {
 
-    var isLanguageVisible = !(repoLanguage.isNullOrEmpty())
-    var isStarVisible = !(starsCount.isNullOrEmpty())
-    var isDescVisible = !(repoDesc.isNullOrEmpty())
+    val isLanguageVisible
+        get() = !(repoLanguage.isNullOrEmpty())
+    val isStarVisible
+        get() = !(starsCount.isNullOrEmpty())
+    val isDescVisible
+        get() = !(repoDesc.isNullOrEmpty())
 
     data class Owner(
         @SerializedName("avatar_url")

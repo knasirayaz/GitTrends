@@ -39,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.knasirayaz.gittrends.R
 import com.knasirayaz.gittrends.domain.common.ResultStates
 import com.knasirayaz.gittrends.domain.models.TrendingListItem
@@ -191,8 +192,9 @@ fun LanguageView(mTrendingListItem: TrendingListItem) {
 @Composable
 fun ProfilePictureView(url: String) {
     Box(modifier = Modifier.padding(top = 5.dp)) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+        AsyncImage(
+            placeholder = painterResource(id = R.drawable.ic_launcher_background),
+            model = url,
             contentDescription = stringResource(id = R.string.tt_profile_picture),
             modifier = Modifier
                 .size(39.dp)
