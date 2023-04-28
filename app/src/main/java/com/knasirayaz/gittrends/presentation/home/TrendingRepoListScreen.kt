@@ -39,6 +39,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.knasirayaz.gittrends.R
 import com.knasirayaz.gittrends.domain.common.ResultStates
 import com.knasirayaz.gittrends.domain.models.TrendingListItem
@@ -53,21 +55,29 @@ fun TrendingRepoListScreen(viewModel: TrendingRepoListViewModel = hiltViewModel(
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = { AppBar() },
         content = { topBarPaddingValues ->
-            Column(Modifier.padding(topBarPaddingValues)) {
-                var isLoading = false
-                if (state is ResultStates.Loading) {
-                    isLoading = (state as ResultStates.Loading).isLoading
-                }
-                if (isLoading) {
-                    LoadingView()
-                } else {
-                    if (state is ResultStates.Success) {
-                        val data = (state as ResultStates.Success).data
-                        ListView(data)
+            SwipeRefresh(
+                modifier = Modifier.testTag(stringResource(id = R.string.tt_pull_to_refresh)),
+                state = SwipeRefreshState(false),
+                onRefresh = {
+                    viewModel.getTrendingRepoList(true)
+                }) {
+                Column(Modifier.padding(topBarPaddingValues)) {
+                    var isLoading = false
+                    if (state is ResultStates.Loading) {
+                        isLoading = (state as ResultStates.Loading).isLoading
                     }
+                    if (isLoading) {
+                        LoadingView()
+                    } else {
+                        if (state is ResultStates.Success) {
+                            val data = (state as ResultStates.Success).data
+                            ListView(data)
+                        }
 
+                    }
                 }
             }
+
         })
 
 }

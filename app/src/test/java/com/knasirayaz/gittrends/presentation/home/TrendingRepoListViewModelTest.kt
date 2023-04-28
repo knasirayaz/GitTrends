@@ -1,14 +1,10 @@
 package com.knasirayaz.gittrends.presentation.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.knasirayaz.gittrends.domain.common.ResultStates
-import com.knasirayaz.gittrends.domain.models.TrendingListItem
 import com.knasirayaz.gittrends.domain.repository.TrendingRepoListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -21,7 +17,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.given
 import org.mockito.kotlin.verify
 
 
@@ -47,11 +42,10 @@ class TrendingRepoListViewModelTest {
 
     @Test
     fun `it should fetch trending list from repository`() = runTest {
-        mTrendingListViewModel.getTrendingRepoList()
+        mTrendingListViewModel.getTrendingRepoList(false)
         advanceUntilIdle()
-        verify(mTrendingListRepository).getRepoList()
+        verify(mTrendingListRepository).getRepoList(false)
     }
-
 
     @After
     fun tearDown() {

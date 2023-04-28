@@ -3,6 +3,7 @@ package com.knasirayaz.gittrends.presentation.home
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.knasirayaz.gittrends.data.repository.TrendingRepoListRepositoryImpl
+import com.knasirayaz.gittrends.data.source.persistance.TrendingRepoListDao
 import com.knasirayaz.gittrends.data.source.remote.Webservice
 import com.knasirayaz.gittrends.domain.common.ResultStates
 import com.knasirayaz.gittrends.domain.models.GetTrendingRepoListResponse
@@ -40,6 +41,9 @@ class TrendingRepoListFeature {
     @Mock
     lateinit var webService : Webservice
 
+    @Mock
+    lateinit var dao : TrendingRepoListDao
+
     private lateinit var mRepository : TrendingRepoListRepository
     private lateinit var mViewModel : TrendingRepoListViewModel
     private lateinit var mTrendingListItem: GetTrendingRepoListResponse
@@ -71,7 +75,7 @@ class TrendingRepoListFeature {
     @Test
     fun `fetch trending repo list`() = runTest{
         given(webService.fetchTrendingRepositories()).willReturn(mTrendingListItem)
-        mRepository = TrendingRepoListRepositoryImpl(webService, null)
+        mRepository = TrendingRepoListRepositoryImpl(webService, dao)
         mViewModel = TrendingRepoListViewModel(mRepository)
         mViewModel.getTrendingListObserver().observeForever(mObserver)
         advanceUntilIdle()
@@ -92,7 +96,7 @@ class TrendingRepoListFeature {
     @Test
     fun `failed to fetch trending repo list`() = runTest{
         given(webService.fetchTrendingRepositories()).willReturn(GetTrendingRepoListResponse(false, emptyList(), 0))
-        mRepository = TrendingRepoListRepositoryImpl(webService, null)
+        mRepository = TrendingRepoListRepositoryImpl(webService, dao)
         mViewModel = TrendingRepoListViewModel(mRepository)
         mViewModel.getTrendingListObserver().observeForever(mObserver)
         advanceUntilIdle()
@@ -101,7 +105,7 @@ class TrendingRepoListFeature {
             inOrder(mObserver){
                 verify(mObserver).onChanged(ResultStates.Loading(true))
                 advanceUntilIdle()
-                verify(mObserver).onChanged(ResultStates.Failed("Api Unreachable"))
+                verify(mObserver).onChanged(ResultStates.Failed("Something went wrong"))
                 verify(mObserver).onChanged(ResultStates.Loading(false))
             }
 
@@ -115,7 +119,7 @@ class TrendingRepoListFeature {
         mRepository  = mock(TrendingRepoListRepository::class.java)
         mViewModel = TrendingRepoListViewModel(mRepository)
         mViewModel.getTrendingListObserver().observeForever(mObserver)
-        given(mRepository.getRepoList()).willReturn(ResultStates.Success(mTrendingListItem.items))
+        given(mRepository.getRepoList(false)).willReturn(ResultStates.Success(mTrendingListItem.items))
 
         launch {
             inOrder(mObserver){

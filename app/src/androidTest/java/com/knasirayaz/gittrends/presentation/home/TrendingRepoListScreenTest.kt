@@ -12,6 +12,9 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performGesture
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.knasirayaz.gittrends.R.*
@@ -23,6 +26,7 @@ import com.knasirayaz.gittrends.presentation.base.MainActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.junit.Assert
 
 import org.junit.Before
 import org.junit.Rule
@@ -124,6 +128,15 @@ class TrendingRepoListScreenTest {
         composeTestRule
             .onNodeWithTag(context.getString(string.tt_repo_stars))
             .assertExists()
+
+        composeTestRule
+            .onNodeWithTag(context.getString(string.tt_pull_to_refresh))
+            .assertExists()
+    }
+
+    @Test
+    fun should_refresh_when_pull(){
+
     }
 
     @Test

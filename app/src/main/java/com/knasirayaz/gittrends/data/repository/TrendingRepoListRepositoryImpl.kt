@@ -15,14 +15,19 @@ class TrendingRepoListRepositoryImpl @Inject constructor(
     private val dao: TrendingRepoListDao
 ) :
     TrendingRepoListRepository {
-    override suspend fun getRepoList(): ResultStates<List<TrendingListItem>> =
+    override suspend fun getRepoList(isRefresh: Boolean): ResultStates<List<TrendingListItem>> =
         withContext(Dispatchers.IO) {
-            val resultsFromDb = dao.fetchTrendingRepositories()
-            if(resultsFromDb.isEmpty()){
-               return@withContext getDataFromApi()
+            if(isRefresh){
+                return@withContext getDataFromApi()
             }else{
-                return@withContext ResultStates.Success(resultsFromDb)
+                val resultsFromDb = dao.fetchTrendingRepositories()
+                if(resultsFromDb.isNullOrEmpty()){
+                    return@withContext getDataFromApi()
+                }else{
+                    return@withContext ResultStates.Success(resultsFromDb)
+                }
             }
+
         }
 
     private suspend fun getDataFromApi(): ResultStates<List<TrendingListItem>> {
@@ -33,7 +38,7 @@ class TrendingRepoListRepositoryImpl @Inject constructor(
                     saveTrendingListToDatabase(results.items)
                     return@withContext ResultStates.Success(results.items)
                 }else
-                    return@withContext ResultStates.Failed("Api Unreachable")
+                    return@withContext ResultStates.Failed("Something went wrong")
             } catch (e: HttpException) {
                 return@withContext ResultStates.Failed(e.message())
             }

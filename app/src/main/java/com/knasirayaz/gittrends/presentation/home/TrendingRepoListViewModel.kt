@@ -19,17 +19,16 @@ class TrendingRepoListViewModel @Inject constructor(private var repository : Tre
 
     fun getTrendingListObserver() : LiveData<ResultStates<List<TrendingListItem>>>{
         return trendingListLiveData.also {
-            getTrendingRepoList()
+            getTrendingRepoList(false)
         }
     }
 
-    fun getTrendingRepoList() {
+    fun getTrendingRepoList(isFresh: Boolean) {
         viewModelScope.launch {
             trendingListLiveData.value = ResultStates.Loading(isLoading = true)
-            trendingListLiveData.postValue(repository.getRepoList())
+            trendingListLiveData.postValue(repository.getRepoList(isFresh))
             trendingListLiveData.value = ResultStates.Loading(isLoading = false)
         }
-
     }
 
 }
