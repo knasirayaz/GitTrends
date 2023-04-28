@@ -67,9 +67,10 @@ class TrendingRepoListRepositoryImplTest{
 
     @Test
     fun `it should return failure when list is not fetched successfully`() = runTest{
-        given(webService.fetchTrendingRepositories()).willThrow(HttpException(Response.error<TrendingListItem>(404, ResponseBody.create(null, ""))))
+        val error =  Response.error<TrendingListItem>(404, ResponseBody.create(null, ""))
+        given(webService.fetchTrendingRepositories()).willThrow(HttpException(error))
         val results = mTrendingRepoListRepository.getRepoList()
-        assertEquals(ResultStates.Failed("Api Unreachable"), results)
+        assertEquals(ResultStates.Failed(error.message()), results)
     }
 
     @Test

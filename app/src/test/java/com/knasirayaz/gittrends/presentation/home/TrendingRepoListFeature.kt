@@ -73,8 +73,6 @@ class TrendingRepoListFeature {
         mRepository = TrendingRepoListRepositoryImpl(webService, null)
         mViewModel = TrendingRepoListViewModel(mRepository)
         mViewModel.getTrendingListObserver().observeForever(mObserver)
-
-        mViewModel.getTrendingRepoList()
         advanceUntilIdle()
 
 
@@ -96,7 +94,6 @@ class TrendingRepoListFeature {
         mRepository = TrendingRepoListRepositoryImpl(webService, null)
         mViewModel = TrendingRepoListViewModel(mRepository)
         mViewModel.getTrendingListObserver().observeForever(mObserver)
-        mViewModel.getTrendingRepoList()
         advanceUntilIdle()
 
         launch {
@@ -117,7 +114,6 @@ class TrendingRepoListFeature {
         mRepository  = mock(TrendingRepoListRepository::class.java)
         mViewModel = TrendingRepoListViewModel(mRepository)
         mViewModel.getTrendingListObserver().observeForever(mObserver)
-        mViewModel.getTrendingRepoList()
         given(mRepository.getRepoList()).willReturn(ResultStates.Success(mTrendingListItem.items))
 
         launch {
